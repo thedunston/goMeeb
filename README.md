@@ -52,7 +52,7 @@ On a Windows 10 computer using Powershell, run:
 
 which will produce output something like this:
 
-`
+```
 "ProcessName","ID","Path"
 "chrome.exe",1234,"C:\Users\user\AppData\Local\Google\Chrome\Application\chrome.exe"
 "explorer.exe",5678,"C:\Windows\explorer.exe"
@@ -65,7 +65,7 @@ which will produce output something like this:
 "chrome.exe",3333,"C:\Users\user\AppData\Local\Google\Chrome\Application\chrome.exe"
 "dellupdate.exe",4444,"C:\Program Files (x86)\Dell Update\Update.exe"
 "systemd.exe",5555,"C:\Windows\System32\svchost.exe"
-`
+```
 
 On a Windows 10 system that is 'clean' or known to not be infected (here again, you can use a fresh install of Windows or the image used to configure new systems), run the same Powershell command and save it as the **baseline.csv** file.
 
@@ -73,6 +73,7 @@ On a Windows 10 system that is 'clean' or known to not be infected (here again, 
 
 and get output something like this.
 
+```
 "ProcessName","ID","Path"
 "chrome.exe",2342,"C:\Users\user\AppData\Local\Google\Chrome\Application\chrome.exe"
 "explorer.exe",4527,"C:\Windows\explorer.exe"
@@ -84,17 +85,17 @@ and get output something like this.
 "chrome.exe",5321,"C:\Users\user\AppData\Local\Google\Chrome\Application\chrome.exe"
 "dellupdate.exe",1523,"C:\Program Files (x86)\Dell Update\Update.exe"
 "systemd.exe",2374,"C:\Windows\System32\svchost.exe"
-
+```
 .  Use the "Windows10-baseline-processes.csv" file as the baseline.
 
 Create a directory structure:
 
-`
+```
 baseline.exe
 Windows10-baseline-processes.csv
 ----+analyze_hosts\
 ------hostname1.csv
-`
+```
 
 Then run:
 
@@ -102,7 +103,7 @@ Then run:
 
 That will print any deviations from the baseline file (Windows10-baseline-processescsv), which will help you identify any anomalies on your existing IIS server (hostname1).
 
-`
+```
 [1.00 C:\Users\user\AppData\Local\Google\Chrome\Application\chrome.exe]
 [1.00 C:\Windows\explorer.exe]
 [1.00 C:\Program Files\Spotify\Spotify.exe]
@@ -112,8 +113,7 @@ That will print any deviations from the baseline file (Windows10-baseline-proces
 [1.00 C:\Windows\system32\taskeng.exe]
 [1.00 C:\Program Files (x86)\Dell Update\Update.exe]
 [0.50 C:\ProgramData\Dwm.exe]
-
-`
+```
 In the above output, the "Dwm.exe" Path stands out because it doesn't exist in the baseline. It is also an anomaly because the Dwm.exe process is usually "dwm.exe" and is located under "C:\Windows\System32\" directory. The average of 0.50 means it is running on half of the 2 systems or just 1 system.
 
 Based on the CSV file, you can select any header and filter on it. As long as the CSV file has the value passed to "-header" it will use it for it's calculations. For the `baseline` tool, it is designed to be used with similarly configured systems. The Windows 11 desktops of your developers may be different than those configured for your Human Resources personnel so be sure the baseline file is similar to the hosts being analyzed. The more similar the systems, the easier it will be to filter out anomalies.
@@ -136,12 +136,12 @@ If you have a similar dataset, then you'd want a lower threshold so the -3 is a 
 
 Here is `mel` running on a homogenous dataset of 200 Windows 11 desktop systems with the default threshold of -3.
 
-`
+```
 meeb.exe -d ../meebs/csvs/
 
 [2 -3.838629 C:\ProgramData\system32\csrss.exe]
 [1 -4.139659 C:\Program Files (x86)\iPod\ iTunes AppleTunes.exe]
-`
+```
 
 It is able to find 2 anomalies. The first value is the number of hosts the file is on and then the logarithmic value. Since the dataset is homogenous, the lower threshold shows rare processes running.
 
@@ -153,7 +153,9 @@ Smaller datasets have less confidence so a higher threshold is necessary -2 or -
 
 Using the dataset from above which contains CSV files for 200 hosts, when we change the threshold to -2 it doesn't produce any differences. Changing it to -1 shows different results:
 
-`
+```
+meeb.exe -d ../meebs/csvs/ -t -1
+
 [snipped for brevity]
 [200 -1.838629 C:\ProgramData\Ashampoo Winzip AshampooWinZip.exe]
 [200 -1.838629 C:\Program Files\WebServer_11.24.0.0_x64__8wekyb3d8bbwe\WebServer.exe]
@@ -167,8 +169,12 @@ Using the dataset from above which contains CSV files for 200 hosts, when we cha
 [193 -1.854101 C:\Windows\taskmgr.exe]
 [2 -3.838629 C:\ProgramData\system32\csrss.exe]
 [1 -4.139659 C:\Program Files (x86)\iPod\ iTunes AppleTunes.exe]
-`
+```
 Note how there is a C:\Windows\taskmgr.exe on 193 hosts, but didn't show up as an anomaly with a threshold of -3. That is why you need to change the threshold so that you better spot anomalies that may exist outside of a given threshold. While larger datasets have higher confidence of anomalies with a lower threshold, some anomalies could still be missed. Accordingly, all of these factors are the reason you need to change the the threshold during your analysis. Also, the legit `taskmgr.exe` file is located in `C:\Windows\system32\taskmgr.exe`. If this was a real system, this would likely be a mass compromise UNLESS there is a custom program in that path or a third-party program had a similar name process. *CONTEXT! CONTEXT! CONTEXT!*
+
+### Output Results
+
+When using any of the tools, especially `mel`, the output can be quite hard to read depending on the number and length of fields in the CSV file. You can export the output to `csv` or `html` using the `-o` switch and then `-f` to save to a specific file. Note the console is the default output.
 
 ### mel and meeb
 
