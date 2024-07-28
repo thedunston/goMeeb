@@ -42,9 +42,11 @@ It is best to run the tools on computers that are configured the same. For examp
 
 Also, run the tools on CSV files with the same type of data. If you have 20 computers and dump a list of running processes, then have a separate CSV files of running processes for each host using the same tool.
 
-If you only have one computer running an IIS server on Windows 2016, a recommendation is to setup a stock version of Windows 2016 with the same version of IIS and any add-on programs. Then, use hte goMeeb's baseline tool to compare the output of the CSV files. For this example, it is best to use the **baseline** tool.
+If you only have one computer running an IIS server on Windows 2016, a recommendation is to setup a stock version of Windows 2016 with the same version of IIS and any add-on programs. Then, use hte goMeeb's `benny` tool to compare the output of the CSV files. For this example, it is best to use the **benny** tool, which does a baseline comparison of the average number of times a data point is seen across hosts.
 
-## Baseline tool Example
+## Baseline tool example with benny
+
+**`benny` is ONLY supported when comparing host data that should be similar.**
 
 On a Windows 10 computer using Powershell, run:
 
@@ -90,8 +92,13 @@ and get output something like this.
 
 Create a directory structure:
 
+<<<<<<< HEAD
 ```
 baseline.exe
+=======
+`
+benny.exe
+>>>>>>> 5b09a5a (- Update directories and files and updated the README.)
 Windows10-baseline-processes.csv
 ----+analyze_hosts\
 ------hostname1.csv
@@ -99,7 +106,7 @@ Windows10-baseline-processes.csv
 
 Then run:
 
-`.\baseline.exe -d analyse_hosts -b Windows10-baseline-processes.csv -header "Path"`
+`.\benny.exe -d analyse_hosts -b Windows10-baseline-processes.csv -header "Path"`
 
 That will print any deviations from the baseline file (Windows10-baseline-processescsv), which will help you identify any anomalies on your existing IIS server (hostname1).
 
@@ -116,7 +123,9 @@ That will print any deviations from the baseline file (Windows10-baseline-proces
 ```
 In the above output, the "Dwm.exe" Path stands out because it doesn't exist in the baseline. It is also an anomaly because the Dwm.exe process is usually "dwm.exe" and is located under "C:\Windows\System32\" directory. The average of 0.50 means it is running on half of the 2 systems or just 1 system.
 
-Based on the CSV file, you can select any header and filter on it. As long as the CSV file has the value passed to "-header" it will use it for it's calculations. For the `baseline` tool, it is designed to be used with similarly configured systems. The Windows 11 desktops of your developers may be different than those configured for your Human Resources personnel so be sure the baseline file is similar to the hosts being analyzed. The more similar the systems, the easier it will be to filter out anomalies.
+Based on the CSV file, you can select any header and filter on it. As long as the CSV file has the value passed to "-header" it will use it for it's calculations. For the `benny` tool, it is designed to be used with similarly configured systems. The Windows 11 desktops of your developers may be different than those configured for your Human Resources personnel so be sure the baseline file is similar to the hosts being analyzed. The more similar the systems, the easier it will be to filter out anomalies.
+
+The tool `benny` is named for Benjamin Mossé for learning how to use averages to examine anomalies in the Mossé Cybersecurity Threat Hunting and Threat Intelligence course.
 
 ### Logarithms
 
@@ -172,9 +181,13 @@ meeb.exe -d ../meebs/csvs/ -t -1
 ```
 Note how there is a C:\Windows\taskmgr.exe on 193 hosts, but didn't show up as an anomaly with a threshold of -3. That is why you need to change the threshold so that you better spot anomalies that may exist outside of a given threshold. While larger datasets have higher confidence of anomalies with a lower threshold, some anomalies could still be missed. Accordingly, all of these factors are the reason you need to change the the threshold during your analysis. Also, the legit `taskmgr.exe` file is located in `C:\Windows\system32\taskmgr.exe`. If this was a real system, this would likely be a mass compromise UNLESS there is a custom program in that path or a third-party program had a similar name process. *CONTEXT! CONTEXT! CONTEXT!*
 
+<<<<<<< HEAD
 ### Output Results
 
 When using any of the tools, especially `mel`, the output can be quite hard to read depending on the number and length of fields in the CSV file. You can export the output to `csv` or `html` using the `-o` switch and then `-f` to save to a specific file. Note the console is the default output.
+=======
+In the above output, you can also see the difference with the 'AppleiTunes.exe' path and the 'AppleTunes.exe' path. 
+>>>>>>> 5b09a5a (- Update directories and files and updated the README.)
 
 ### mel and meeb
 
