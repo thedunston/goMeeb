@@ -10,12 +10,12 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
-	"text/template"
 )
 
 type PathAvg struct {

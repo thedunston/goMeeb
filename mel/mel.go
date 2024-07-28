@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"math"
 	"os"
@@ -12,7 +13,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"text/template"
 )
 
 func main() {
