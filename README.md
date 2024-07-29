@@ -179,15 +179,14 @@ meeb.exe -d ../meebs/csvs/ -t -1
 [2 -3.838629 C:\ProgramData\system32\csrss.exe]
 [1 -4.139659 C:\Program Files (x86)\iPod\ iTunes AppleTunes.exe]
 ```
+
 Note how there is a C:\Windows\taskmgr.exe on 193 hosts, but didn't show up as an anomaly with a threshold of -3. That is why you need to change the threshold so that you better spot anomalies that may exist outside of a given threshold. While larger datasets have higher confidence of anomalies with a lower threshold, some anomalies could still be missed. Accordingly, all of these factors are the reason you need to change the the threshold during your analysis. Also, the legit `taskmgr.exe` file is located in `C:\Windows\system32\taskmgr.exe`. If this was a real system, this would likely be a mass compromise UNLESS there is a custom program in that path or a third-party program had a similar name process. *CONTEXT! CONTEXT! CONTEXT!*
 
-<<<<<<< HEAD
+In the above output, you can also see the difference with the 'AppleiTunes.exe' path and the 'AppleTunes.exe' path. 
+
 ### Output Results
 
 When using any of the tools, especially `mel`, the output can be quite hard to read depending on the number and length of fields in the CSV file. You can export the output to `csv` or `html` using the `-o` switch and then `-f` to save to a specific file. Note the console is the default output.
-=======
-In the above output, you can also see the difference with the 'AppleiTunes.exe' path and the 'AppleTunes.exe' path. 
->>>>>>> 5b09a5a (- Update directories and files and updated the README.)
 
 ### mel and meeb
 
