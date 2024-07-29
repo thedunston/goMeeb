@@ -92,13 +92,8 @@ and get output something like this.
 
 Create a directory structure:
 
-<<<<<<< HEAD
 ```
-baseline.exe
-=======
-`
 benny.exe
->>>>>>> 5b09a5a (- Update directories and files and updated the README.)
 Windows10-baseline-processes.csv
 ----+analyze_hosts\
 ------hostname1.csv
