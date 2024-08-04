@@ -6,6 +6,8 @@ goMeeb's purpose is to help with identifying anomalies across a set of computer 
 
 goMeeb uses basic math functions (averages and logarithms) to help with identifying the anomalies.
 
+Scanned with Semgrep - https://semgrep.dev/
+
 ## Use Cases
 
 An organization has multiple systems (dozens, hundreds, or thousands) and want to determine if there are any running processes, loaded DLLS, local user accounts, scheduled tasks or just about any data point they want to examine to help find latent malicious artifacts.

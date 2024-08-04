@@ -10,7 +10,6 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"strings"
 	"sync"
 )
 
@@ -27,7 +26,7 @@ func main() {
 	dir = flag.String("d", ".", "Directory containing CSV files")
 	header = flag.String("header", "Path", "CSV header to perform logarithmic function on")
 	output = flag.String("o", "console", "Output format: console, html, csv")
-	outputFile = flag.String("f", "output.csv", "Output file path for CSV format")
+	outputFile = flag.String("f", "", "Output file path for CSV format")
 	threshold = flag.Float64("t", -3.0, "Threshold for log proportion to identify anomalies")
 	flag.Parse()
 
@@ -49,25 +48,37 @@ func main() {
 
 	}
 
-	// If the output file exists, prompt the user to overwrite it.
-	if _, err := os.Stat(*outputFile); !os.IsNotExist(err) {
+	// Check that the output file path is not empty.
+	if *outputFile != "" {
 
-		log.Printf("Output file %s already exists. Overwrite?", *outputFile)
+		// If the outputfile exists, prompt the user to overwrite it.
+		if _, err := os.Stat(filepath.Clean(*outputFile)); err == nil {
 
-		var overwrite string
+			fmt.Printf("Output file %s already exists. Overwrite? (y/n): ", *outputFile)
+			var confirm string
 
-		// Prompt the user for confirmation.
-		_, err = fmt.Scanln(&overwrite)
-		if err != nil {
+			fmt.Scanln(&confirm)
+			if confirm != "y" {
 
-			log.Printf("Failed to read user input: %v", err)
-
-			return
-
+				return
+			}
 		}
+	}
 
-		if strings.ToLower(overwrite) != "y" {
+	// Ensure output is console, html, or csv.
+	if *output != "console" && *output != "html" && *output != "csv" {
 
+		log.Printf("Invalid output format: %s", *output)
+		return
+
+	}
+
+	// if -o is html or csv, then ensure outputFile is not empty.
+	if *output == "html" || *output == "csv" {
+
+		if *outputFile == "" {
+
+			log.Printf("Output file path is required")
 			return
 
 		}
@@ -79,8 +90,8 @@ func main() {
 	if err != nil {
 
 		log.Printf("Failed to get CSV files: %v", err)
-
 		return
+
 	}
 
 	// Determine number of goroutines to use based on the number of files

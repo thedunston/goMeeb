@@ -28,7 +28,7 @@ func main() {
 	dir = flag.String("d", ".", "Directory containing CSV files")
 	headers = flag.String("header", "username", "CSV headers to perform logarithmic function on (comma-separated)")
 	output = flag.String("o", "console", "Output format: console, html, csv")
-	outputFile = flag.String("f", "output.csv", "Output file path for CSV format")
+	outputFile = flag.String("f", "", "Output file path for CSV format")
 	threshold = flag.Float64("t", -3.0, "Threshold for log proportion to identify anomalies")
 	flag.Parse()
 
@@ -42,6 +42,41 @@ func main() {
 	if *dir == "" || *headers == "" {
 		log.Printf("A directory and headers are required")
 		return
+	}
+
+	// Ensure output is console, html, or csv.
+	if *output != "console" && *output != "html" && *output != "csv" {
+
+		log.Printf("Invalid output format: %s", *output)
+		return
+
+	}
+
+	// if -o is html or csv, then ensure outputFile is not empty.
+	if *output == "html" || *output == "csv" {
+
+		if *outputFile == "" {
+			log.Printf("Output file path is required")
+			return
+		}
+	}
+
+	// Check that the output file path is not empty.
+	if *outputFile != "" {
+
+		// If the outputfile exists, prompt the user to overwrite it.
+		if _, err := os.Stat(filepath.Clean(*outputFile)); err == nil {
+
+			fmt.Printf("Output file %s already exists. Overwrite? (y/n): ", *outputFile)
+			var confirm string
+
+			fmt.Scanln(&confirm)
+			if confirm != "y" {
+
+				return
+			}
+		}
+
 	}
 
 	// Split headers into a slice and validate.
