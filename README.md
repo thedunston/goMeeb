@@ -2,17 +2,15 @@
 
 *Status: Actively Supported.*
 
-goMeeb's purpose is to help with identifying anomalies across a set of computer systems.
-
-goMeeb uses basic math functions (averages and logarithms) to help with identifying the anomalies.
+goMeeb's purpose is to help with identifying anomalies across a set of computer systems using averages and logarithms.
 
 Scanned with Semgrep - https://semgrep.dev/
 
 ## Use Cases
 
-An organization has multiple systems (dozens, hundreds, or thousands) and want to determine if there are any running processes, loaded DLLS, local user accounts, scheduled tasks or just about any data point they want to examine to help find latent malicious artifacts.
+- An organization has multiple systems (dozens, hundreds, or thousands) and want to determine if there are any running processes, loaded DLLS, local user accounts, scheduled tasks or just about any data point they want to examine to help find latent malicious artifacts.
 
-Another use case is for an incident handler who saves data in CSV format and need to analyze the results and find anomalous data in a large dataset.
+- An incident handler saves data in CSV format and need to analyze the results and find anomalous data in a large dataset.
 
 ## File type
 
@@ -20,7 +18,7 @@ goMeeb works on CSV files.
 
 ## An Anomaly
 
-What constitutes an anomaly is highly dependent on the environment and the data set collected. For example, if you collect running processes on 20 systems and have the 20 CSV files in a directory, the tool **meeb** will aggregate the list of all processes and print each one with the average number of times the process appears across 20 systems. If the process exists on all systems it will have an average of 1.0 next to it. If it appears on only one system, it will have 0.01 next to it. That means it appears on only 1% of those 20 systems. The process with 0.01 may not be an anomaly because it could be the one computer that has a different program running on it. Accordingly, it requires having a goal in mind and understanding the environment where the tools are used.
+What constitutes an anomaly is highly dependent on the environment and the data set collected. For example, if you collect running processes on 20 systems and have the 20 CSV files in a directory, the tool **meeb** will aggregate the list of all processes and print each one with the average number of times the process appears across 20 systems. If the process exists on all systems it will have an average of 1.0 next to it. If it appears on only one system, it would have 0.01 next to it. That means it appears on only 1% of those 20 systems. The process with 0.01 may not be an anomaly because it could be the one computer that has a different program running on it. Accordingly, it requires having a goal in mind and understanding the environment where the tools are used.
 
 ## Obtaining data in CSV format
 
@@ -30,7 +28,7 @@ Powershell can export data to CSV using `Export-CSV -NoTypeInformation`. Use `-N
 
 ### Recommendations
 
-Use tools that can export the full path of any process, driver, or DLL. Even when listing network sockets, obtain the full path of the process that has the socket open. It will provide much more valuable information and allows quickly detecting anomalies.
+Use tools that can export the full path of any process, driver, or DLL. Even when listing network sockets, obtain the full path of the process that has the socket open. It will provide much more valuable information and allows quickly detecting anomalies (e.g. a process running named "svchost.exe" may look normal, but if it is running from `C:\ProgramData\svchost.exe` instead of `c:\windows\system32\svchost` is not normal)
 
 Try to include the hostname in the output because `mel` will list the entire CSV row and having the hostname in the output saves having to perform searches to see where the process exists.
 
@@ -40,11 +38,11 @@ When possible, collect data with the highest level of privileges available. Non-
 
 ## Preparing to use goMeeb tools
 
-It is best to run the tools on computers that are configured the same. For example, if you have 5 IIS webservers running on Windows 2019, then run the goMeeb tools on those systems. You can run them on an Exchange server and analyze with the WIndows 2019 servers, but it will have a lot of results you'll have to filter through because an IIS server and Exchange server have a different set of processes running and loaded modules. That may create a lot of work trying to verify if the data you're looking at is normal or an anomaly.
+It is best to run the tools against a dataset of computers that are configured the same. For example, if you have 5 IIS webservers running on Windows 2019, then collect the data from those 5 and then run `goMeeb` tools on those systems. You can run the tools against a dataset of Exchange servers and analyze with the Windows 2019 servers, though it will have a lot of results you'll have to filter through because an IIS server and Exchange server have a different set of processes running and loaded modules.
 
-Also, run the tools on CSV files with the same type of data. If you have 20 computers and dump a list of running processes, then have a separate CSV files of running processes for each host using the same tool.
+Also, run the `gomeeb` tools on CSV files with the same type of data. If you have 20 computers and dump a list of running processes, then have a separate CSV files of running processes for each host using the same tool that produces the same format.
 
-If you only have one computer running an IIS server on Windows 2016, a recommendation is to setup a stock version of Windows 2016 with the same version of IIS and any add-on programs. Then, use hte goMeeb's `benny` tool to compare the output of the CSV files. For this example, it is best to use the **benny** tool, which does a baseline comparison of the average number of times a data point is seen across hosts.
+If you only have one computer running an IIS server on Windows 2016, a recommendation is to setup a stock version of Windows 2016 with the same version of IIS and any add-on programs. Then, use the goMeeb's `benny` tool to compare the output of the CSV files. For this example, it is best to use the **benny** tool, which does a baseline comparison of the average number of times a data point is seen across hosts.
 
 ## Baseline tool example with benny
 
